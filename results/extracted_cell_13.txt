@@ -1,0 +1,20 @@
+Nombre de tweets au sentiment négatif mais Favor dans Val : 13
+
+=== Exemple 1 ===
+Target    : Women empowerment
+Tweet     : بجاحة وتمييز صريح مستحيل تشوفه بالدول المتطوره وياخذون وضعية لا ارى ولا اسمع بس يعرفون كيف يشتغلون على التلميع الاعلامي بخصوص تمكين المراه #المساواة_بالتخصصات_مطلب
+Sentiment : Negative (Confiance: 1.0)
+Stance    : Favor (Confiance: 1.0)
+--------------------------------------------------
+=== Exemple 2 ===
+Target    : Women empowerment
+Tweet     : مع #تمكين_المرأة  في الوظايف ، وصلنا لمرحلة في التوظيف ان حظوظ المرأة اكثر من الرجل في القطاعين العام والخاص وفي هذي الحالة  اتوقع حدوث نكس في المفاهيم بحيث تقوم المرأة بخطبة من تراه مناسب كزوج لها وتدفع له المهر وتصرف على الحفل.  وهو يسوي حفل الخطوبة ويجيب الكوشة 😉 #بس_اقول
+Sentiment : Negative (Confiance: 0.482)
+Stance    : Favor (Confiance: 0.7272)
+--------------------------------------------------
+=== Exemple 3 ===
+Target    : Women empowerment
+Tweet     : سبب خشية البعض من تمكين المرأة هو أن تأخذ مكانه .
+Sentiment : Negative (Confiance: 0.515)
+Stance    : Favor (Confiance: 1.0)
+--------------------------------------------------

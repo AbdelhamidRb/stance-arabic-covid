@@ -1,6 +1,11 @@
 Experiment_ID,Section,Model,Target,Seed,Threshold,F1_Favor,F1_Against,F1_None,F1_StanceEval,Macro_F1,Split_Evaluated,Details
-A_Trivial_Favor,Partie A,Toujours Favor (Trivial),All,42,N/A,0.7611,0.0,0.0,0.3806,0.2537,Val,Prédit systématiquement Favor pour tout tweet
-A_Rule_Target_Majority,Partie A,Règle Cible -> Majorité,All,42,N/A,0.7611,0.0,0.0,0.3806,0.2537,Val,"Majorités Train: {'Women empowerment': 'Favor', 'Covid Vaccine': 'Favor', 'Digital Transformation': 'Favor'}"
-A_Rule_Hashtags_Support,Partie A,Règle Hashtag Soutien -> Favor,All,42,N/A,0.7611,0.0,0.0,0.3806,0.2537,Val,72 hashtags retenus
+A_Trivial_Favor,Partie A,Toujours Favor (Trivial),All,42,,0.7611,0.0,0.0,0.3806,0.2537,Val,Prédit systématiquement Favor pour tout tweet
+A_Rule_Target_Majority,Partie A,Règle Cible -> Majorité,All,42,,0.7611,0.0,0.0,0.3806,0.2537,Val,"Majorités Train: {'Women empowerment': 'Favor', 'Covid Vaccine': 'Favor', 'Digital Transformation': 'Favor'}"
+A_Rule_Hashtags_Support,Partie A,Règle Hashtag Soutien -> Favor,All,42,,0.7611,0.0,0.0,0.3806,0.2537,Val,72 hashtags retenus
 A_TFIDF_LogReg_Standard,Partie A,TF-IDF (mots 1-2 + car 2-5) + LogReg,All,42,"argmax (1.0, 1.0, 1.0)",0.7854,0.6524,0.3509,0.7189,0.5962,Val,"class_weight=balanced, C=1.0"
 A_TFIDF_LogReg_TunedThreshold,Partie A,TF-IDF + LogReg (Seuils optimisés),All,42,"weights=(1.0, 0.85, 0.5)",0.7862,0.6693,0.1905,0.7278,0.5487,Val,Gain F1_StanceEval: +0.0089
+B1_NLI_mDeBERTa_AR,Partie B,mDeBERTa-v3-base-xnli (Hypothèses Arabe),All,42,theta=0.30,0.7586,0.6264,0.2353,0.6925,0.5401,Val,Hypothèses en arabe (الكاتب يدعم / يعارض)
+B1_NLI_mDeBERTa_EN,Partie B,mDeBERTa-v3-base-xnli (Hypothèses Anglais),All,42,theta=0.20,0.7561,0.3824,0.1892,0.5693,0.4426,Val,Cross-lingual NLI (The author supports / opposes)
+B1_NLI_mDeBERTa_FR,Partie B,mDeBERTa-v3-base-xnli (Hypothèses Français),All,42,theta=0.20,0.7332,0.3609,0.1795,0.5471,0.4245,Val,Cross-lingual NLI (L'auteur soutient / s'oppose)
+B2_CAMeLBERT_Sentiment,Partie B,CAMeLBERT Sentiment -> Règle Stance,All,42,Heuristique directe,0.6766,0.6462,0.3429,0.6614,0.5552,Val,"positive->Favor, negative->Against, neutral->None"
+B2_GroundTruth_Sentiment,Partie B,Sentiment Réel Annotateurs -> Règle Stance,All,42,Heuristique directe,0.7632,0.733,0.3158,0.7481,0.604,Val,Plafond théorique de la règle de sentiment
