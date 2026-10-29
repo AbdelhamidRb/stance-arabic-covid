@@ -1,0 +1,6 @@
+Experiment_ID,Section,Model,Target,Seed,Threshold,F1_Favor,F1_Against,F1_None,F1_StanceEval,Macro_F1,Split_Evaluated,Details
+A_Trivial_Favor,Partie A,Toujours Favor (Trivial),All,42,N/A,0.7611,0.0,0.0,0.3806,0.2537,Val,Prédit systématiquement Favor pour tout tweet
+A_Rule_Target_Majority,Partie A,Règle Cible -> Majorité,All,42,N/A,0.7611,0.0,0.0,0.3806,0.2537,Val,"Majorités Train: {'Women empowerment': 'Favor', 'Covid Vaccine': 'Favor', 'Digital Transformation': 'Favor'}"
+A_Rule_Hashtags_Support,Partie A,Règle Hashtag Soutien -> Favor,All,42,N/A,0.7611,0.0,0.0,0.3806,0.2537,Val,72 hashtags retenus
+A_TFIDF_LogReg_Standard,Partie A,TF-IDF (mots 1-2 + car 2-5) + LogReg,All,42,"argmax (1.0, 1.0, 1.0)",0.7854,0.6524,0.3509,0.7189,0.5962,Val,"class_weight=balanced, C=1.0"
+A_TFIDF_LogReg_TunedThreshold,Partie A,TF-IDF + LogReg (Seuils optimisés),All,42,"weights=(1.0, 0.85, 0.5)",0.7862,0.6693,0.1905,0.7278,0.5487,Val,Gain F1_StanceEval: +0.0089

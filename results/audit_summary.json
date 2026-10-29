@@ -1,0 +1,46 @@
+{
+  "total_train": 3502,
+  "total_test": 619,
+  "stance_train_dist": {
+    "Favor": 2148,
+    "Against": 1021,
+    "None": 333
+  },
+  "stance_test_dist": {
+    "Favor": 380,
+    "Against": 180,
+    "None": 59
+  },
+  "target_train_dist": {
+    "Women empowerment": 1190,
+    "Covid Vaccine": 1167,
+    "Digital Transformation": 1145
+  },
+  "target_test_dist": {
+    "Women empowerment": 210,
+    "Covid Vaccine": 206,
+    "Digital Transformation": 203
+  },
+  "contradictory_train_cases": [
+    {
+      "target": "Digital Transformation",
+      "text": "مستحيل نستغنى عن وسائل التواصل الإجتماعي مهما كان وخصوصا ونحن  في عصر التحول الإلكتروني في كل المجالات ولكن نستطيع نقنن استخدامها حتى لو قفل الجوال لفترة أو لساعات محددة من اليوم 😎😎😎😎 #برنامج_جونا_غير",
+      "stances": [
+        "None",
+        "Favor",
+        "Favor"
+      ],
+      "confidences": [
+        0.5921,
+        1.0,
+        0.7427
+      ],
+      "ids": [
+        1008,
+        2952,
+        3347
+      ]
+    }
+  ],
+  "leakage_test_count": 2
+}
