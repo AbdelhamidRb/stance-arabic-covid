@@ -16,3 +16,11 @@ C3_Transformer_NoPos_Ablation,Partie C,Mini-Transformer (Ablation SANS PosEncodi
 C4_Char_CNN,Partie C,Char-CNN (Convolutions 1D Caractères),All,42,argmax,0.8102,0.6633,0.0,0.7368,0.4912,Val,"Filtres 3, 5, 7 - Meilleur modèle From Scratch !"
 C_Imbalance_WeightedLoss,Partie C,C2 BiLSTM+Attention (Perte Pondérée),All,42,argmax,0.7524,0.59,0.2667,0.6712,0.5364,Val,"Poids [Against=1.14, Favor=0.54, None=3.51]"
 C_Imbalance_Oversampling,Partie C,C2 BiLSTM+Attention (Sur-échantillonnage),All,42,argmax,0.7662,0.6071,0.3684,0.6866,0.5806,Val,Oversampling sur Train (5799 ex). Macro-F1 +11 points !
+D1_AraBERT_Frozen_CLS,Partie D,AraBERTv02-Twitter Gelé [CLS] + LogReg,All,42,argmax,0.7805,0.6108,0.2697,0.6956,0.5537,Val,"Feature extraction token [CLS], class_weight=balanced"
+D1_AraBERT_Frozen_MeanPooling,Partie D,AraBERTv02-Twitter Gelé [Mean Pooling] + LogReg,All,42,argmax,0.7861,0.6415,0.4091,0.7138,0.6122,Val,"Moyenne des tokens > CLS (+1.82 pts StanceEval, +5.85 Macro)"
+D2_AraBERT_Frozen_BiLSTM_Attn,Partie D,AraBERT Gelé + Tête BiLSTM + Attention,All,42,argmax,0.8409,0.7087,0.3929,0.7748,0.6475,Val,Hybride BERT gelé + BiLSTM/Attention (+6.1 pts sur D1)
+E1_FineTuning_AraBERT_Avg3Seeds,Partie E,AraBERTv02-Twitter Fine-Tuné (Moyenne 3 Seeds),All,"42, 123, 999",argmax,0.852,0.7426,0.4865,0.7973,0.6937,Val,"lr 2e-5, warmup 10%, early stop. Std = +/- 0.0099"
+E1_FineTuning_MARBERTv2_Avg3Seeds,Partie E,MARBERTv2 Fine-Tuné (Moyenne 3 Seeds),All,"42, 123, 999",argmax,0.8654,0.7796,0.5393,0.8225,0.7281,Val,Champion SOTA Single-Task ! Bat AraBERT sur 3/3 seeds (+2.52 pts)
+E2_MultiTask_MARBERT_Lambda00,Partie E,MARBERTv2 Multi-Tâche (lambda=0.0),All,42,argmax,0.8742,0.7771,0.4483,0.8256,0.6999,Val,Baseline single-task architecture multi-têtes
+E2_MultiTask_MARBERT_Lambda03,Partie E,MARBERTv2 Multi-Tâche (lambda=0.3),All,42,argmax,0.8884,0.8187,0.4615,0.8536,0.7229,Val,🏆 RECORD ABSOLU DU PROJET : F1 StanceEval = 0.8536 ! (+2.80 pts)
+E2_MultiTask_MARBERT_Lambda07,Partie E,MARBERTv2 Multi-Tâche (lambda=0.7),All,42,argmax,0.8759,0.7946,0.3529,0.8353,0.6745,Val,Chute liée à la compétition de gradients (task interference)

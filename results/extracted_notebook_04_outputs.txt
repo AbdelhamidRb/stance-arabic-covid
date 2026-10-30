@@ -1,0 +1,258 @@
+
+==================== CODE CELL 2 ====================
+Google Colab détecté. Préparation des dépendances...
+Device utilisé : cuda
+Modèle GPU : Tesla T4
+
+==================== CODE CELL 4 ====================
+Jeu Train : 3151 | Validation : 351 | Test : 619
+
+==================== CODE CELL 6 ====================
+Chargement du modèle et tokenizer : aubmindlab/bert-base-arabertv02-twitter...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+config.json:   0%|          | 0.00/667 [00:00<?, ?B/s]
+tokenizer_config.json:   0%|          | 0.00/476 [00:00<?, ?B/s]
+vocab.txt:   0%|          | 0.00/751k [00:00<?, ?B/s]
+tokenizer.json:   0%|          | 0.00/1.25M [00:00<?, ?B/s]
+special_tokens_map.json:   0%|          | 0.00/112 [00:00<?, ?B/s]
+model.safetensors: reconstructing file:   0%|          |  0.00B /  541MB            
+model.safetensors: downloading bytes:           |  0.00B            
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: aubmindlab/bert-base-arabertv02-twitter
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+pooler.dense.bias                          | MISSING    | 
+pooler.dense.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+Extraction des features sur Train sub...
+Extraction BERT:   0%|          | 0/99 [00:00<?, ?it/s]
+Extraction des features sur Validation...
+Extraction BERT:   0%|          | 0/11 [00:00<?, ?it/s]
+-> D1 : AraBERT Gelé [CLS] + LogReg : {'F1_Favor': 0.7805, 'F1_Against': 0.6108, 'F1_None': 0.2697, 'F1_StanceEval': 0.6956, 'Macro_F1': 0.5537}
+-> D1 : AraBERT Gelé [Mean Pooling] + LogReg : {'F1_Favor': 0.7861, 'F1_Against': 0.6415, 'F1_None': 0.4091, 'F1_StanceEval': 0.7138, 'Macro_F1': 0.6122}
+
+==================== CODE CELL 8 ====================
+Entraînement de la tête BiLSTM+Attention sur AraBERT Gelé (5 époques)...
+-> D2 : AraBERT Gelé + BiLSTM + Attention : {'F1_Favor': 0.8409, 'F1_Against': 0.7087, 'F1_None': 0.3929, 'F1_StanceEval': 0.7748, 'Macro_F1': 0.6475}
+--- Visualisation des Poids d'Attention sur 5 Exemples (D2) ---
+Exemple 1 | Cible: Digital Transformation | Vraie Stance: Favor | Top Tokens d'Attention: [('شغ', 0.258), ('بتم', 0.233), ('"', 0.157), ('##كن', 0.077)]
+Exemple 2 | Cible: Digital Transformation | Vraie Stance: Against | Top Tokens d'Attention: [('وتعطيل', 0.366), ('تم', 0.363), ('غلق', 0.116), ('ولماذا', 0.088)]
+Exemple 3 | Cible: Covid Vaccine | Vraie Stance: Against | Top Tokens d'Attention: [('لا', 0.678), ('لا', 0.171), ('لتط', 0.054), ('لا', 0.041)]
+Exemple 4 | Cible: Women empowerment | Vraie Stance: Against | Top Tokens d'Attention: [('الايجابية', 0.25), ('مرتفعة', 0.199), ('حالها', 0.145), ('بعد', 0.14)]
+Exemple 5 | Cible: Digital Transformation | Vraie Stance: None | Top Tokens d'Attention: [('بدء', 0.403), ('##L', 0.116), ('التطبيقية', 0.072), ('في', 0.061)]
+
+==================== CODE CELL 10 ====================
+
+=======================================================
+FINE-TUNING SOTA : aubmindlab/bert-base-arabertv02-twitter
+=======================================================
+
+--- Entraînement avec Seed 42 ---
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: aubmindlab/bert-base-arabertv02-twitter
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+classifier.weight                          | MISSING    | 
+classifier.bias                            | MISSING    | 
+bert.pooler.dense.bias                     | MISSING    | 
+bert.pooler.dense.weight                   | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+Seed 42 -> F1_StanceEval: 0.8113 | Macro_F1: 0.7015
+
+--- Entraînement avec Seed 123 ---
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: aubmindlab/bert-base-arabertv02-twitter
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+classifier.weight                          | MISSING    | 
+classifier.bias                            | MISSING    | 
+bert.pooler.dense.bias                     | MISSING    | 
+bert.pooler.dense.weight                   | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+Seed 123 -> F1_StanceEval: 0.7914 | Macro_F1: 0.6885
+
+--- Entraînement avec Seed 999 ---
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: aubmindlab/bert-base-arabertv02-twitter
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+classifier.weight                          | MISSING    | 
+classifier.bias                            | MISSING    | 
+bert.pooler.dense.bias                     | MISSING    | 
+bert.pooler.dense.weight                   | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+Seed 999 -> F1_StanceEval: 0.7893 | Macro_F1: 0.691
+
+==> Résultat Moyen aubmindlab/bert-base-arabertv02-twitter : F1_StanceEval = 0.7973 (+/- 0.0099) | Macro_F1 = 0.6937
+
+=======================================================
+FINE-TUNING SOTA : UBC-NLP/MARBERTv2
+=======================================================
+config.json:   0%|          | 0.00/757 [00:00<?, ?B/s]
+tokenizer_config.json:   0%|          | 0.00/439 [00:00<?, ?B/s]
+vocab.txt:   0%|          | 0.00/1.10M [00:00<?, ?B/s]
+special_tokens_map.json:   0%|          | 0.00/112 [00:00<?, ?B/s]
+
+--- Entraînement avec Seed 42 ---
+pytorch_model.bin: reconstructing file:   0%|          |  0.00B /  654MB            
+pytorch_model.bin: downloading bytes:           |  0.00B            
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: UBC-NLP/MARBERTv2
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.decoder.weight             | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.decoder.bias               | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+classifier.weight                          | MISSING    | 
+classifier.bias                            | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+model.safetensors: reconstructing file:   0%|          |  0.00B /  654MB            
+model.safetensors: downloading bytes:           |  0.00B            
+Seed 42 -> F1_StanceEval: 0.8198 | Macro_F1: 0.7254
+
+--- Entraînement avec Seed 123 ---
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: UBC-NLP/MARBERTv2
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.decoder.weight             | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.decoder.bias               | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+classifier.weight                          | MISSING    | 
+classifier.bias                            | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+Seed 123 -> F1_StanceEval: 0.8299 | Macro_F1: 0.7311
+
+--- Entraînement avec Seed 999 ---
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: UBC-NLP/MARBERTv2
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.decoder.weight             | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.decoder.bias               | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+classifier.weight                          | MISSING    | 
+classifier.bias                            | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+Seed 999 -> F1_StanceEval: 0.8178 | Macro_F1: 0.7278
+
+==> Résultat Moyen UBC-NLP/MARBERTv2 : F1_StanceEval = 0.8225 (+/- 0.0053) | Macro_F1 = 0.7281
+
+==================== CODE CELL 12 ====================
+
+--- Entraînement Multi-Tâche avec lambda = 0.0 ---
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: UBC-NLP/MARBERTv2
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Résultats Stance (lambda=0.0) : {'F1_Favor': 0.8742, 'F1_Against': 0.7771, 'F1_None': 0.4483, 'F1_StanceEval': 0.8256, 'Macro_F1': 0.6999}
+
+--- Entraînement Multi-Tâche avec lambda = 0.3 ---
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: UBC-NLP/MARBERTv2
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Résultats Stance (lambda=0.3) : {'F1_Favor': 0.8884, 'F1_Against': 0.8187, 'F1_None': 0.4615, 'F1_StanceEval': 0.8536, 'Macro_F1': 0.7229}
+
+--- Entraînement Multi-Tâche avec lambda = 0.7 ---
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: UBC-NLP/MARBERTv2
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Résultats Stance (lambda=0.7) : {'F1_Favor': 0.8759, 'F1_Against': 0.7946, 'F1_None': 0.3529, 'F1_StanceEval': 0.8353, 'Macro_F1': 0.6745}
