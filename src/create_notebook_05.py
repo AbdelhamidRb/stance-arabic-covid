@@ -96,7 +96,7 @@ val_df = val_df.reset_index(drop=True)
 stance2id = {"Against": 0, "Favor": 1, "None": 2}
 id2stance = {0: "Against", 1: "Favor", 2: "None"}
 
-for df in [train_sub, val_df, test_df]:
+for df in [train_df, train_sub, val_df, test_df]:
     df['stance_id'] = df['stance'].map(stance2id)
 
 print(f"Données prêtes -> Train sub: {len(train_sub)} | Val: {len(val_df)} | Test scellé: {len(test_df)}")
@@ -256,7 +256,12 @@ Entraînement sur **2 cibles** et évaluation sur la **3ème cible jamais vue** 
 3. Permutation 3 : Train sur (Digital + Women) $\\to$ Test sur **Covid**
 """))
 
-cells.append(nbf.v4.new_code_cell("""targets = list(train_df['target'].unique())
+cells.append(nbf.v4.new_code_cell("""# Sécurité : s'assurer que stance_id existe sur tous les dataframes
+for df in [train_df, test_df]:
+    if 'stance_id' not in df.columns:
+        df['stance_id'] = df['stance'].map(stance2id)
+
+targets = list(train_df['target'].unique())
 print("Cibles du corpus :", targets)
 
 cross_target_results = []

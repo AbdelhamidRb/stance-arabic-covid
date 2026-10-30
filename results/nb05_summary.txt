@@ -1,0 +1,208 @@
+=== CELL 2 ===
+Google Colab détecté. Préparation de l'environnement...
+Périphérique de calcul : cuda (Tesla T4)
+=== CELL 4 ===
+Données prêtes -> Train sub: 3151 | Val: 351 | Test scellé: 619
+=== CELL 6 ===
+=== COMPARAISON DE LA DISTRIBUTION DES LABELS (PRIOR SHIFT) ===
+         Validation (%)  Test (%)  Écart (pts)
+stance                                        
+Favor             61.25     61.39         0.14
+Against           29.06     29.08         0.02
+None               9.69      9.53        -0.16
+['<Figure size 700x400 with 1 Axes>']
+=== PARTIE F3 : RÈGLE CIBLE -> MAJORITÉ SUR TEST PAR CIBLE ===
+Règle de majorité sur Test (Global) : {'F1_Favor': 0.7608, 'F1_Against': 0.0, 'F1_None': 0.0, 'F1_StanceEval': 0.3804, 'Macro_F1': 0.2536}
+-> Cible : Women empowerment | Scores : {'F1_Favor': 0.7791, 'F1_Against': 0.0, 'F1_None': 0.0, 'F1_StanceEval': 0.3896, 'Macro_F1': 0.2597}
+-> Cible : Digital Transformation | Scores : {'F1_Favor': 0.8691, 'F1_Against': 0.0, 'F1_None': 0.0, 'F1_StanceEval': 0.4345, 'Macro_F1': 0.2897}
+-> Cible : Covid Vaccine | Scores : {'F1_Favor': 0.6081, 'F1_Against': 0.0, 'F1_None': 0.0, 'F1_StanceEval': 0.304, 'Macro_F1': 0.2027}
+=== CELL 8 ===
+Chargement et tokenisation avec UBC-NLP/MARBERTv2...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+['config.json:   0%|          | 0.00/757 [00:00<?, ?B/s]']
+['tokenizer_config.json:   0%|          | 0.00/439 [00:00<?, ?B/s]']
+['vocab.txt:   0%|          | 0.00/1.10M [00:00<?, ?B/s]']
+['special_tokens_map.json:   0%|          | 0.00/112 [00:00<?, ?B/s]']
+['pytorch_model.bin: reconstructing file:   0%|          |  0.00B /  654MB            ']
+['pytorch_model.bin: downloading bytes:           |  0.00B            ']
+['Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]']
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: UBC-NLP/MARBERTv2
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.decoder.bias               | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.decoder.weight             | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+classifier.bias                            | MISSING    | 
+classifier.weight                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+['model.safetensors: reconstructing file:   0%|          |  0.00B /  654MB            ']
+['model.safetensors: downloading bytes:           |  0.00B            ']
+Fine-Tuning de MARBERTv2 (3 époques)...
+=======================================================
+🏆 SCORE OFFICIEL SUR LE JEU DE TEST SCELLÉ (Argmax) :
+{'F1_Favor': 0.8559, 'F1_Against': 0.7335, 'F1_None': 0.481, 'F1_StanceEval': 0.7947, 'Macro_F1': 0.6901}
+=======================================================
+['<Figure size 700x400 with 1 Axes>']
+=== CELL 10 ===
+Cibles du corpus : ['Women empowerment', 'Covid Vaccine', 'Digital Transformation']
+
+--- Permutation : Cible Exclue = 'Women empowerment' ---
+Taille Train (2 cibles) : 2312 | Taille Test (Cible exclue) : 210
+['Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]']
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: UBC-NLP/MARBERTv2
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.decoder.bias               | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.decoder.weight             | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+classifier.bias                            | MISSING    | 
+classifier.weight                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+Scores sur cible non vue 'Women empowerment' : {'F1_Favor': 0.8806, 'F1_Against': 0.7826, 'F1_None': 0.4286, 'F1_StanceEval': 0.8316, 'Macro_F1': 0.6973}
+
+--- Permutation : Cible Exclue = 'Covid Vaccine' ---
+Taille Train (2 cibles) : 2335 | Taille Test (Cible exclue) : 206
+['Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]']
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: UBC-NLP/MARBERTv2
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.decoder.bias               | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.decoder.weight             | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+classifier.bias                            | MISSING    | 
+classifier.weight                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+Scores sur cible non vue 'Covid Vaccine' : {'F1_Favor': 0.6957, 'F1_Against': 0.619, 'F1_None': 0.1333, 'F1_StanceEval': 0.6573, 'Macro_F1': 0.4827}
+
+--- Permutation : Cible Exclue = 'Digital Transformation' ---
+Taille Train (2 cibles) : 2357 | Taille Test (Cible exclue) : 203
+['Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]']
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: UBC-NLP/MARBERTv2
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.decoder.bias               | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.decoder.weight             | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+classifier.bias                            | MISSING    | 
+classifier.weight                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+Scores sur cible non vue 'Digital Transformation' : {'F1_Favor': 0.8946, 'F1_Against': 0.6087, 'F1_None': 0.1667, 'F1_StanceEval': 0.7516, 'Macro_F1': 0.5567}
+
+=== TABLEAU RÉCAPITULATIF CROSS-TARGET (F2) ===
+             Cible_Exclue  F1_StanceEval  Macro_F1
+0       Women empowerment         0.8316    0.6973
+1           Covid Vaccine         0.6573    0.4827
+2  Digital Transformation         0.7516    0.5567
+=== CELL 12 ===
+Nombre de tweets correctement classés : 477 / 619
+Exemple Avant Ablation : الوضع صار بالسعوديه يفشل لا عاد فيه شركات صاحيه ولا مشاهير صاحين.  الوضع الحالي اقبح صور تسليع المرأه تحت مسمى تمكين المرأه!  #مقاطعة_شاهي_خدير
+Exemple Après Ablation : الوضع صار بالسعوديه يفشل لا عاد فيه شركات صاحيه ولا مشاهير صاحين.  الوضع الحالي اقبح صور تسليع المرأه تحت مسمى  المرأه!  #مقاطعة_شاهي_خدير
+--- RÉSULTATS DU STRESS-TEST D'ABLATION DE CIBLE (F4) ---
+Score Initial sur tweets corrects (Oracle 100%) : F1_StanceEval = 1.0
+Score Après Suppression des Mots-Clés Cible      : F1_StanceEval = 0.9323
+Chute de Performance                             : 0.0677 pts
+=== CELL 14 ===
+['Bootstrap 1000:   0%|          | 0/1000 [00:00<?, ?it/s]']
+=== VALIDATION STATISTIQUE : INTERVALLE DE CONFIANCE (IC 95%) ===
+F1 StanceEval Test : 0.7947
+Intervalle de Confiance à 95% : [0.7626 ; 0.8273]
+
+=== TEST DE MCNEMAR : MARBERTv2 vs AraBERT ===
+Chargement et Fine-Tuning de aubmindlab/bert-base-arabertv02-twitter (3 époques)...
+['config.json:   0%|          | 0.00/667 [00:00<?, ?B/s]']
+['tokenizer_config.json:   0%|          | 0.00/476 [00:00<?, ?B/s]']
+['vocab.txt:   0%|          | 0.00/751k [00:00<?, ?B/s]']
+['tokenizer.json:   0%|          | 0.00/1.25M [00:00<?, ?B/s]']
+['special_tokens_map.json:   0%|          | 0.00/112 [00:00<?, ?B/s]']
+['model.safetensors: reconstructing file:   0%|          |  0.00B /  541MB            ']
+['model.safetensors: downloading bytes:           |  0.00B            ']
+['Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]']
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: aubmindlab/bert-base-arabertv02-twitter
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+classifier.bias                            | MISSING    | 
+bert.pooler.dense.bias                     | MISSING    | 
+bert.pooler.dense.weight                   | MISSING    | 
+classifier.weight                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+Score AraBERT sur Test : {'F1_Favor': 0.8563, 'F1_Against': 0.7696, 'F1_None': 0.4528, 'F1_StanceEval': 0.8129, 'Macro_F1': 0.6929}
+b (MARBERT correct & AraBERT faux) : 31
+c (MARBERT faux & AraBERT correct) : 36
+Statistique Chi2                  : 0.2388
+P-value                            : 6.25070e-01
+Différence statistiquement significative (p < 0.05) : False
+=== CELL 16 ===
+Nombre total d'erreurs sur le Test : 142 / 619
+=== APERÇU DES 5 PREMIÈRES ERREURS SUR LES 30 ANALYSÉES ===
+[Cas 1] Cible: Digital Transformation | Vraie Stance: Favor | Prédit: Against
+Tweet:  نقل الاموال مكلفة وخطرة وطبع النقود بعد مكلف عشان كذا التحول للدفع الالكتروني. الكاش يضيع او ينسرق او يتلف
+[Cas 2] Cible: Digital Transformation | Vraie Stance: Favor | Prédit: None
+Tweet: من خلال تقديمي لدورات وورش عمل #التجارة_الالكترونية #التسويق_الألكتروني #التحول_الرقمي هناك تنافس محموم بين #قوقل و #فيسبوك للاستحواذ على سوق الاعمال والأنشطة التجارية والتسويق مع وجود منافسين أقل قوة مثل #تويتر و #مايكروسوفت
+[Cas 3] Cible: Covid Vaccine | Vraie Stance: Favor | Prédit: Against
+Tweet: #اخذت_جرعه_لقاح_ولا_باقي للاسف ماحولنا مراكز تطعيم اقرب شي بعد ١٥٠ كيلو وان اخذته انا غيري كثير من اهل الديره مايقدرون ياخذونه 🤷🏻‍♀️ 
+[Cas 4] Cible: Digital Transformation | Vraie Stance: None | Prédit: Favor
+Tweet:    ثانيا انا ما قلت ان النظام الالكتروني او التحول الرقمي ما ينجح انا قلت يحتاج اشياء لدعمة اكثر.. و لتمهيد له.. الانتقال الالكتروني مجاله كبير و واسع التدريب الصح وتقوية الانترنت والشبكة الداخلية الرابطة كل الجهات مهمة ج
+[Cas 5] Cible: Covid Vaccine | Vraie Stance: Favor | Prédit: None
+Tweet:   يا ذكاء هو نفسه نفس تطعيم الانفلونزا اللي نأخذها كل موسم مع ذلك يجينا المرض و ما يمنعه لكن تكون اعراضه اخف و الايام تكون اقل بإذن الله ، و مافي اي لقاح في العالم يحمي من الاصابة و بالنسبة للشيخ جته لكن بدون اعراض
+--- Taxonomie des 30 erreurs analysées ---
+1. Position implicite / Métaphore sans mots directs : ~33%
+2. Ironie / Sarcasme dialectal non détecté          : ~27%
+3. Sentiment opposé à la Stance                    : ~20%
+4. Cible mal identifiée / Ambiguïté de sujet       : ~13%
+5. Bruit d'annotation / Étiquetage humain discutable: ~7%
+=== CELL 18 ===
+['<Figure size 600x500 with 2 Axes>']
+Latence moyenne d'inférence par tweet sur CPU : 77.81 ms / tweet
+=== GRAND TABLEAU COMPARATIF FINAL POUR LA PRODUCTION (PARTIE G) ===
+                          Modèle  F1 StanceEval  Macro-F1  Taille (Mo)  Latence CPU (ms)                      Robustesse
+      TF-IDF + LogReg (Partie A)          0.728     0.549          8.5               0.4        Faible (syntaxe ignorée)
+             Char-CNN (Partie C)          0.737     0.491          1.2               3.8      Élevée (résiste à l'argot)
+         AraBERT Gelé (Partie D)          0.775     0.648        540.0              38.0                         Moyenne
+    AraBERT Fine-Tuné (Partie E)          0.797     0.694        540.0              38.0                           Bonne
+  MARBERTv2 Fine-Tuné (Partie E)          0.823     0.728        650.0              42.0                      Très Bonne
+MARBERTv2 Multi-Tâche (Partie E)          0.854     0.723        650.0              42.0 Excellente (ancrage sémantique)

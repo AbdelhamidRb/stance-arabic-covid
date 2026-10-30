@@ -24,3 +24,10 @@ E1_FineTuning_MARBERTv2_Avg3Seeds,Partie E,MARBERTv2 Fine-Tuné (Moyenne 3 Seeds
 E2_MultiTask_MARBERT_Lambda00,Partie E,MARBERTv2 Multi-Tâche (lambda=0.0),All,42,argmax,0.8742,0.7771,0.4483,0.8256,0.6999,Val,Baseline single-task architecture multi-têtes
 E2_MultiTask_MARBERT_Lambda03,Partie E,MARBERTv2 Multi-Tâche (lambda=0.3),All,42,argmax,0.8884,0.8187,0.4615,0.8536,0.7229,Val,🏆 RECORD ABSOLU DU PROJET : F1 StanceEval = 0.8536 ! (+2.80 pts)
 E2_MultiTask_MARBERT_Lambda07,Partie E,MARBERTv2 Multi-Tâche (lambda=0.7),All,42,argmax,0.8759,0.7946,0.3529,0.8353,0.6745,Val,Chute liée à la compétition de gradients (task interference)
+F1_MARBERTv2_SealedTest,Partie F,MARBERTv2 Fine-Tuné (Test Scellé),All,42,argmax,0.8559,0.7335,0.481,0.7947,0.6901,Test,"Score officiel test scellé (619 tweets). IC 95%: [0.7626; 0.8273]"
+F1_AraBERT_SealedTest,Partie F,AraBERTv02 Fine-Tuné (Test Scellé),All,42,argmax,0.8563,0.7696,0.4528,0.8129,0.6929,Test,"McNemar vs MARBERT: chi2=0.2388, p=0.625 (diff non significative à p<0.05)"
+F3_Rule_Majority_Test,Partie F,Règle Cible -> Majorité sur Test,All,42,argmax,0.7608,0.0,0.0,0.3804,0.2536,Test,Baseline heuristique de majorité appliquée aux 619 tweets de test
+F2_CrossTarget_Women,Partie F,MARBERTv2 Cross-Target (Exclue: Women),Women,42,argmax,0.8806,0.7826,0.4286,0.8316,0.6973,Test_Women,Train sur Covid+Digital -> Test sur Women (210 ex)
+F2_CrossTarget_Covid,Partie F,MARBERTv2 Cross-Target (Exclue: Covid),Covid,42,argmax,0.6957,0.619,0.1333,0.6573,0.4827,Test_Covid,Train sur Women+Digital -> Test sur Covid (206 ex) - Forte spécificité lexicale
+F2_CrossTarget_Digital,Partie F,MARBERTv2 Cross-Target (Exclue: Digital),Digital,42,argmax,0.8946,0.6087,0.1667,0.7516,0.5567,Test_Digital,Train sur Women+Covid -> Test sur Digital (203 ex)
+F4_StressTest_Ablation,Partie F,MARBERTv2 Stress-Test Ablation Mots Cibles,All,42,argmax,0.9632,0.9014,0.4,0.9323,0.7549,Test_Correct,Ablation mots-clés cibles sur 477 tweets corrects: préservation à 93.2% (chute de 6.77 pts)
