@@ -2,7 +2,7 @@ export const slides = [
   {
     id: 1,
     title: "Détection de Position (Stance Detection) en Langue Arabe sur Twitter",
-    subtitle: "Master 2 Intelligence Artificielle & TALN — Corpus Mawqif",
+    subtitle: "Master 2 TALN (Traitement Automatique du Langage Naturel) — Corpus Mawqif",
     component: "Slide01_Intro",
     notes: `Bonjour à tous. Aujourd'hui, nous vous présentons notre projet de recherche en Traitement Automatique du Langage Naturel consacré à la détection de position (ou Stance Detection) en langue arabe sur Twitter.
 

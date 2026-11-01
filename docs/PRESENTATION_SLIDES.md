@@ -1,8 +1,8 @@
 # 🖥️ Support de Présentation : Soutenance de Projet M2
 # Détection de Position (*Stance Detection*) en Arabe sur Twitter (Corpus Mawqif)
 
-**Auteurs :** Abdelhamid Rherib & Équipe M2 IA  
-**Formation :** Master 2 d'Intelligence Artificielle & TALN / LLM  
+**Auteurs :** Abdelhamid Rherib & [Nom du Binôme]  
+**Formation :** Master 2 TALN (Traitement Automatique du Langage Naturel)  
 **Format :** 12 Slides Projetées – Temps estimé : 15 à 20 minutes  
 
 ---

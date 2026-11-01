@@ -1,9 +1,9 @@
 # 🎓 Rapport de Recherche Scientifique & Technique
 # Détection de Position (*Stance Detection*) en Arabe sur Twitter (Corpus Mawqif)
 
-**Formation :** Master 2 d'Intelligence Artificielle & Traitement Automatique du Langage Naturel (TALN / LLM)  
+**Formation :** Master 2 Traitement Automatique du Langage Naturel (TALN)  
 **Corpus de Référence :** *Mawqif: A Multi-Platform Arabic Stance and Sentiment Dataset* (Alturayeif et al., 2023 / SemEval-StanceEval 2024)  
-**Auteurs :** Abdelhamid Rherib & Équipe M2 IA  
+**Auteurs :** Abdelhamid Rherib & [Nom du Binôme]  
 **Date :** Octobre 2024  
 **Dépôt GitHub :** [AbdelhamidRb/stance-arabic-covid](https://github.com/AbdelhamidRb/stance-arabic-covid)  
 

@@ -203,7 +203,7 @@ export default function App() {
       <header className="h-8 bg-slate-900 text-slate-300 px-6 flex items-center justify-between text-xs border-b border-slate-800 flex-shrink-0 z-10">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5 font-bold text-white tracking-wide">
-            <span className="text-blue-400">◆</span> Soutenance M2 IA & TALN
+            <span className="text-blue-400">◆</span> Soutenance M2 TALN
           </span>
           <span className="text-slate-500">•</span>
           <span className="text-slate-400 truncate">
