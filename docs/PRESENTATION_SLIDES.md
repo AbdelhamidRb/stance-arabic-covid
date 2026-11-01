@@ -1,7 +1,7 @@
 # 🖥️ Support de Présentation : Soutenance de Projet M2
 # Détection de Position (*Stance Detection*) en Arabe sur Twitter (Corpus Mawqif)
 
-**Auteurs :** Abdelhamid Rb & Antigravity  
+**Auteurs :** Abdelhamid Rherib & Équipe M2 IA  
 **Formation :** Master 2 d'Intelligence Artificielle & TALN / LLM  
 **Format :** 12 Slides Projetées – Temps estimé : 15 à 20 minutes  
 

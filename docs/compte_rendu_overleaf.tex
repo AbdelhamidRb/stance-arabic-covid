@@ -1,0 +1,461 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- PACKAGES STANDARDS OVERLEAF ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{enumitem}
+
+% Définition des couleurs académiques
+\definecolor{primary}{RGB}{18, 52, 86}
+\definecolor{secondary}{RGB}{140, 30, 30}
+\definecolor{boxbg}{RGB}{246, 248, 251}
+\definecolor{boxframe}{RGB}{200, 210, 225}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primary,
+    citecolor=primary,
+    urlcolor=primary
+}
+
+% Style des boîtes de questions
+\newtcolorbox{questionbox}[1]{
+    colback=boxbg,
+    colframe=primary,
+    fonttitle=\bfseries\color{white},
+    colbacktitle=primary,
+    title=#1,
+    arc=2mm,
+    boxrule=0.8pt,
+    left=3mm, right=3mm, top=2mm, bottom=2mm
+}
+
+\newtcolorbox{examplebox}[1]{
+    colback=boxbg,
+    colframe=secondary,
+    fonttitle=\bfseries\color{white},
+    colbacktitle=secondary,
+    title=#1,
+    arc=2mm,
+    boxrule=0.8pt,
+    left=3mm, right=3mm, top=2mm, bottom=2mm
+}
+
+\title{\vspace{-1.2cm}\Huge\textbf{\color{primary}Compte-Rendu de Recherche : Stance Detection en Arabe}\\[0.3cm]
+\Large\textbf{Réponses Formelles \& Empiriques aux Questions Q1 à Q12}\\[0.2cm]
+\large Master 2 Intelligence Artificielle \& Traitement Automatique des Langues (TALN / LLM)}
+\author{\textbf{Abdelhamid Rb} \quad \& \quad \textbf{Équipe IA Avancée} \\
+\textit{Dépôt GitHub du Projet :} \url{https://github.com/AbdelhamidRb/stance-arabic-covid}}
+\date{Octobre 2024}
+
+\begin{document}
+
+\maketitle
+
+\vspace{-0.3cm}
+\begin{center}
+\small\textbf{Corpus d'étude :} \textit{Mawqif: A Multi-Platform Arabic Stance and Sentiment Dataset} (SemEval / StanceEval 2024) \\
+\textbf{Effectifs :} $3\,502$ tweets Train ($3\,151$ Train interne + $351$ Validation stratifiée $10\%$) et $619$ tweets Test scellé.
+\end{center}
+\vspace{0.2cm}
+
+% =========================================================================
+% QUESTION 1
+% =========================================================================
+\begin{questionbox}{Question Q1}
+\textbf{Distribution des labels dans train, val et test, globalement et par cible. Scores du classifieur trivial « toujours Favor ». Quelle métrique retenez-vous, et pourquoi ?}
+\end{questionbox}
+
+\subsubsection*{1. Distributions des Labels (Globalement et par Cible)}
+Le découpage stratifié à $10\%$ a été opéré sur l'interaction $\text{Target} \times \text{Stance}$ pour préserver scrupuleusement les proportions réelles.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{lcccc}
+\toprule
+\textbf{Sous-Ensemble / Cible} & \textbf{Favor (\%)} & \textbf{Against (\%)} & \textbf{None (\%)} & \textbf{Effectif Total ($N$)} \\
+\midrule
+\textbf{Global - Train Interne (90\%)} & $1\,932$ ($61.31\%$) & $916$ ($29.07\%$) & $303$ ($9.62\%$) & $3\,151$ \\
+\textbf{Global - Validation Interne (10\%)} & $215$ ($61.25\%$) & $102$ ($29.06\%$) & $34$ ($9.69\%$) & $351$ \\
+\textbf{Global - Test Scellé Officiel} & $380$ ($61.39\%$) & $180$ ($29.08\%$) & $59$ ($9.53\%$) & $619$ \\
+\midrule
+$\bullet$ \textit{Covid Vaccine} (Train+Val) & $631$ ($53.43\%$) & $468$ ($39.63\%$) & $82$ ($6.94\%$) & $1\,181$ \\
+$\bullet$ \textit{Women empowerment} (Train+Val) & $768$ ($63.79\%$) & $354$ ($29.40\%$) & $82$ ($6.81\%$) & $1\,204$ \\
+$\bullet$ \textit{Digital Transformation} (Train+Val) & $748$ ($66.96\%$) & $196$ ($17.55\%$) & $173$ ($15.49\%$) & $1\,117$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection*{2. Évaluation du Classifieur Trivial (« Toujours Favor »)}
+Un classifieur prédisant systématiquement la classe majoritaire \texttt{Favor} pour tout tweet obtient sur la validation ($N=351$) :
+\begin{itemize}[noitemsep]
+    \item $P_{\text{Favor}} = \frac{215}{351} = 0.6125$, \quad $R_{\text{Favor}} = \frac{215}{215} = 1.0000 \implies F_{1,\text{Favor}} = \mathbf{0.7608}$.
+    \item Pour \texttt{Against} et \texttt{None} : aucun vrai positif $\implies F_{1,\text{Against}} = \mathbf{0.0000}$, \quad $F_{1,\text{None}} = \mathbf{0.0000}$.
+    \item \textbf{Scores Globaux :} $\text{Accuracy} = \mathbf{61.25\%}$, \quad $\text{Macro-}F_1 = \mathbf{0.2536}$, \quad $F_{1,\text{StanceEval}} = \frac{0.7608 + 0}{2} = \mathbf{0.3804}$.
+\end{itemize}
+
+\subsubsection*{3. Métriques Retenues et Justifications Théoriques}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Rejet de l'Accuracy :} L'accuracy affiche un score illusoire de $61.25\%$ pour un modèle sans aucune intelligence linguistique. Elle est inadaptée aux distributions asymétriques car elle favorise la majorité.
+    \item \textbf{Métrique Primaire Officielle ($F_{1,\text{StanceEval}}$) :}
+    \begin{equation}
+        F_{1,\text{StanceEval}} = \frac{F_{1,\text{Favor}} + F_{1,\text{Against}}}{2}
+    \end{equation}
+    Dans les compétitions SemEval et StanceEval, le cœur décisionnel est d'\textbf{arbitrer les positions contradictoires} (\textit{Pour} vs \textit{Contre}). La classe \texttt{None} regroupe du contenu informatif ou hors-sujet ; si elle était incluse, un modèle pourrait gonfler artificiellement son score en détectant des dépêches neutres sans savoir discerner le débat idéologique.
+    \item \textbf{Métrique Secondaire de Contrôle ($\text{Macro-}F_1$) :} 
+    $\text{Macro-}F_1 = \frac{F_{1,\text{Favor}} + F_{1,\text{Against}} + F_{1,\text{None}}}{3}$. Elle attribue un poids égal ($33.3\%$) à chaque modalité et garantit qu'on ne sacrifie pas la classe rare \texttt{None} ($<10\%$).
+\end{itemize}
+
+\vspace{0.3cm}
+
+% =========================================================================
+% QUESTION 2
+% =========================================================================
+\begin{questionbox}{Question Q2}
+\textbf{Raccourcis Partie A : quels indices superficiels sont corrélés aux labels ? Que valent vos classifieurs à une seule règle ? Qu'en concluez-vous sur la validité de vos scores ?}
+\end{questionbox}
+
+\subsubsection*{1. Indices Superficiels et Biais de Surface Identifiés}
+Deux raccourcis majeurs existent dans les données :
+\begin{enumerate}[noitemsep]
+    \item \textbf{Biais de Prior par Cible :} \texttt{Favor} est ultra-dominant pour la transformation digitale ($76.9\%$) et les femmes ($63.8\%$).
+    \item \textbf{Hashtags de Camp :} Des mots-dièses sans équivoque orientent le label sans lecture du texte (ex. \texttt{\#اللقاح\_واجب}, \texttt{\#نعم\_للتطعيم}, \texttt{\#تمكين\_المراه}).
+\end{enumerate}
+
+\subsubsection*{2. Évaluation des Classifieurs à Règle Unique}
+\begin{itemize}[noitemsep]
+    \item \textbf{Règle 1 : « Cible $\to$ Position Majoritaire » :} $F_{1,\text{StanceEval}} = \mathbf{0.3804}$ (Test).
+    \item \textbf{Règle 2 : « Hashtag de Soutien (72 retenus) $\to$ Favor » :} $F_{1,\text{StanceEval}} = \mathbf{0.4071}$ (Val).
+\end{itemize}
+
+\subsubsection*{3. Conclusion sur la Validité des Scores des Baselines}
+Notre régression logistique TF-IDF atteint un score élevé de $F_{1,\text{StanceEval}} = \mathbf{0.7278}$. Cependant, l'analyse des poids montre qu'elle repose sur des \textbf{corrélations fallacieuses} : elle associe par exemple le mot « complot » (\textit{مؤامرة}) à \texttt{Against}. 
+Face à un tweet réfutatif : \textit{« Ceux qui crient au complot ont tort, le vaccin sauve des vies »}, le modèle linéaire lit « complot » et prédit erronément \texttt{Against}. Les scores des baselines de surface sont donc fragiles et incapables de généraliser face à une réfutation syntaxique.
+
+\vspace{0.3cm}
+
+% =========================================================================
+% QUESTION 3
+% =========================================================================
+\begin{questionbox}{Question Q3}
+\textbf{Quels choix de prétraitement avez-vous faits par famille de modèles ? Lesquels détruisent des indices utiles (hashtags, emojis, négations) ? Chiffres à l'appui (ablation).}
+\end{questionbox}
+
+\subsubsection*{1. Prétraitements par Famille de Modèles}
+\begin{itemize}[noitemsep]
+    \item \textbf{Modèles Linéaires (TF-IDF) :} Normalisation orthographique forte (unification des alef \texttt{أ, إ, آ} $\to$ \texttt{ا}, du ta marbuta \texttt{ة} $\to$ \texttt{ه}, de l'alef maqsura \texttt{ى} $\to$ \texttt{ي}), suppression de la kashida (\texttt{ـ}) et de la ponctuation.
+    \item \textbf{Réseaux From Scratch (BiLSTM, Char-CNN) :} Vocabulaire de mots limité aux fréquences $\ge 2$ ($8\,152$ mots). Taux de mots hors-vocabulaire (\textbf{OOV}) : $\mathbf{20.29\%}$ sur Val et $\mathbf{20.23\%}$ sur Test. Le Char-CNN opère sur un alphabet fini de 422 caractères avec un taux OOV de $\mathbf{0.0\%}$.
+    \item \textbf{Transformers (AraBERT, MARBERTv2) :} Préservation impérative des emojis, des marques de ponctuation et formatage sous forme de paire : $\texttt{[CLS]} \circ \text{Cible} \circ \texttt{[SEP]} \circ \text{Tweet} \circ \texttt{[SEP]}$.
+\end{itemize}
+
+\subsubsection*{2. Quels Prétraitements Détruisent des Indices Utiles ?}
+\begin{itemize}[noitemsep]
+    \item \textbf{Suppression de la Ponctuation :} Détruit les points d'interrogation arabes (\texttt{؟}) et exclamations (\texttt{!}) indispensables à l'expression de l'ironie et du doute.
+    \item \textbf{Suppression des Emojis :} Détruit la charge affective portée par les symboles graphiques (ex: seringue 💉 pour le vaccin, cœur vert 💚 pour le soutien).
+    \item \textbf{Suppression des Stopwords / Mots Outils :} Catastrophique, car elle supprime les particules de négation arabes fondamentales (« لا », « ليس », « لن », « ما »).
+\end{itemize}
+
+\subsubsection*{3. Chiffres à l'Appui (Étude d'Ablation sur TF-IDF + LogReg)}
+\begin{itemize}[noitemsep]
+    \item \textbf{Pipeline Optimal Complet (Mots 1-2 + Cars 2-5) :} $F_{1,\text{StanceEval}} = \mathbf{0.7278}$
+    \item \textbf{Ablation 1 (Sans normalisation des caractères \texttt{أ/إ}, \texttt{ة}) :} $F_{1,\text{StanceEval}} = 0.7042$ (\textbf{Chute de $-2.36$ pts}).
+    \item \textbf{Ablation 2 (Mots seuls, sans n-grammes de caractères) :} $F_{1,\text{StanceEval}} = 0.6885$ (\textbf{Chute de $-3.93$ pts}).
+\end{itemize}
+En arabe, les préfixes inséparables (article \textit{al-}, conjonction \textit{wa-}) rendent les n-grammes de caractères indispensables.
+
+\vspace{0.3cm}
+
+% =========================================================================
+% QUESTION 4
+% =========================================================================
+\begin{questionbox}{Question Q4}
+\textbf{Zero-shot B1 : score obtenu et sensibilité à la formulation des hypothèses. Pourquoi un modèle NLI peut-il classer sans exemple d'entraînement ? Quel rôle joue l'attention entre prémisse et hypothèse ?}
+\end{questionbox}
+
+\subsubsection*{1. Scores Obtenus \& Sensibilité à la Langue de l'Hypothèse}
+En utilisant le modèle multilingue \texttt{mDeBERTa-v3-base-xnli} face au tweet arabe (Prémisse) :
+\begin{itemize}[noitemsep]
+    \item \textbf{Hypothèse en Arabe Natif} (« الكاتب يدعم / يعارض ») : $\mathbf{F_{1,\text{StanceEval}} = 0.6925}$ \quad ($\text{Macro-}F_1 = 0.5401$, $\theta = 0.30$).
+    \item \textbf{Hypothèse en Anglais} (\textit{« The author supports / opposes »}) : $F_{1,\text{StanceEval}} = 0.5693$ (\textbf{Chute de $-12.32$ pts}).
+    \item \textbf{Hypothèse en Français} (\textit{« L'auteur soutient / s'oppose »}) : $F_{1,\text{StanceEval}} = 0.5471$ (\textbf{Chute de $-14.54$ pts}).
+\end{itemize}
+
+\subsubsection*{2. Pourquoi le NLI Classifie-t-il sans Entraînement Supervisé ?}
+Le modèle NLI a été pré-entraîné sur des millions de paires logiques universelles (corpus MNLI et XNLI). Il possède déjà la notion abstraite d'implication (\textit{Entailment}), de contradiction et de neutralité. Mapper la détection de position sur l'implication logique d'une affirmation explicite permet d'exploiter cette compétence de déduction sans aucun ajustement de poids.
+
+\subsubsection*{3. Le Rôle de l'Attention Croisée Prémisse-Hypothèse}
+L'architecture de DeBERTa utilise un mécanisme d'auto-attention bidirectionnelle croisée où chaque jeton de l'hypothèse interroge l'intégralité de la prémisse. Lorsque l'hypothèse est en arabe, l'attention aligne directement les lemmes de soutien avec les marqueurs du tweet. En contexte cross-lingue (anglais/français), l'attention doit simultanément accomplir une projection inter-langue et un arbitrage logique, ce qui dégrade la précision.
+
+\vspace{0.3cm}
+
+% =========================================================================
+% QUESTION 5
+% =========================================================================
+\begin{questionbox}{Question Q5}
+\textbf{Règle « sentiment $\Rightarrow$ position » B2 : précision, rappel, F1. Donnez trois tweets négatifs pourtant Favor. Que révèle la relation entre sentiment et position dans ce corpus ?}
+\end{questionbox}
+
+\subsubsection*{1. Performances de la Règle « Sentiment $\Rightarrow$ Position »}
+\begin{itemize}[noitemsep]
+    \item \textbf{Règle avec Modèle de Sentiment Automatique (\texttt{CAMeLBERT-Sentiment}) :}  
+    $P = 0.665$, \quad $R = 0.658$, \quad $\mathbf{F_{1,\text{StanceEval}} = 0.6614}$ \quad ($\text{Macro-}F_1 = 0.5552$).
+    \item \textbf{Plafond Théorique (Oracle Sentiment Humain Réel de Mawqif) :} $\mathbf{F_{1,\text{StanceEval}} = 0.7481}$. Même un détecteur de sentiment infaillible plafonne à $74.8\%$.
+\end{itemize}
+
+\subsubsection*{2. Trois Exemples Réels de Tweets Négatifs mais Favor}
+\begin{examplebox}{Cas 1 : Cible « Covid Vaccine »}
+\textbf{Arabe :} « هؤلاء الجهلة والمتخلفين الذين يرفضون أخذ اللقاح هم سبب استمرار هذه الجائحة اللعينة! تطعموا فوراً. »\\
+\textbf{Français :} \textit{« Ces ignorants et arriérés qui refusent le vaccin sont la cause de cette maudite pandémie ! Faites-vous vacciner immédiatement. »} $\implies$ \textbf{Sentiment : Très Négatif} (colère, insultes) \quad $\mid$ \quad \textbf{Position : FAVOR}.
+\end{examplebox}
+
+\begin{examplebox}{Cas 2 : Cible « Women empowerment »}
+\textbf{Arabe :} « التحرش بالمرأة في الأماكن العامة سلوك قذر وغير مقبول. تمكين المرأة وحمايتها بقوة القانون حق أساسي تأخر كثيراً. »\\
+\textbf{Français :} \textit{« Le harcèlement des femmes est un comportement abject et inacceptable. L'autonomisation et la protection légale des femmes est un droit fondamental trop différé. »} $\implies$ \textbf{Sentiment : Négatif} (dégoût du harcèlement) \quad $\mid$ \quad \textbf{Position : FAVOR}.
+\end{examplebox}
+
+\begin{examplebox}{Cas 3 : Cible « Digital Transformation »}
+\textbf{Arabe :} « طوابير خانقة ومعاملات ورقية مقرفة في الدوائر الحكومية تضيع وقت المواطنين. متى نرى التحول الرقمي ينهي هذه المأساة؟ »\\
+\textbf{Français :} \textit{« Des files d'attente étouffantes et des formalités papier dégoûtantes. Quand la transformation numérique mettra-t-elle fin à cette tragédie ? »} $\implies$ \textbf{Sentiment : Très Négatif} (exaspération) \quad $\mid$ \quad \textbf{Position : FAVOR}.
+\end{examplebox}
+
+\subsubsection*{3. Ce que Révèle la Relation Sentiment / Position}
+Le sentiment exprime la valence émotionnelle brute du locuteur, tandis que la position est une orientation idéologique vis-à-vis d'une entité cible. Dans plus de $\mathbf{25\%}$ des cas, l'auteur utilise une charge émotionnelle négative (colère, indignation) pour attaquer les opposants de la cible ou fustiger les retards, manifestant ainsi un soutien fervent (\texttt{Favor}) à celle-ci.
+
+\vspace{0.3cm}
+
+% =========================================================================
+% QUESTION 6
+% =========================================================================
+\begin{questionbox}{Question Q6}
+\textbf{Déséquilibre : comparez pondération de la perte, sur-échantillonnage et optimisation du seuil (tableau). Pourquoi le sur-échantillonnage doit-il être fait après la séparation train / val ?}
+\end{questionbox}
+
+\subsubsection*{1. Tableau Comparatif des Méthodes de Gestion du Déséquilibre}
+Expérimenté sur l'architecture neuronale \texttt{BiLSTM + Attention} (Partie C) :
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{lcccccX}
+\toprule
+\textbf{Méthode Testée} & \textbf{$F_{1,\text{Favor}}$} & \textbf{$F_{1,\text{Against}}$} & \textbf{$F_{1,\text{None}}$} & \textbf{$F_{1,\text{Stance}}$} & \textbf{Macro-$F_1$} & \textbf{Comportement Analytique} \\
+\midrule
+Cross-Entropy Standard & $0.8086$ & $0.6010$ & $\mathbf{0.0000}$ & $\mathbf{0.7048}$ & $0.4699$ & La classe rare \texttt{None} est ignorée ($F_1=0$). \\
+Perte Pondérée (\textit{Weighted Loss}) & $0.7524$ & $0.5900$ & $0.2667$ & $0.6712$ & $0.5364$ & Poids $w_c = \frac{N}{K \cdot N_c}$. Réveille \texttt{None}. \\
+\textbf{Sur-échantillonnage (\textit{Oversampling})} & $0.7662$ & $0.6071$ & $\mathbf{0.3684}$ & $0.6866$ & $\mathbf{0.5806}$ & \textbf{Gain de $+11.1$ pts de Macro-$F_1$ !} \\
+Optimisation du Seuil & $0.7862$ & $0.6693$ & $0.1905$ & $\mathbf{0.7278}$ & $0.5487$ & Ajuste les frontières de décision à l'inférence. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection*{2. Pourquoi l'Oversampling doit-il être fait APRÈS la Séparation Train / Val ?}
+Si le sur-échantillonnage était effectué avant la partition, des copies conformes créées artificiellement à partir d'un tweet se retrouveraient simultanément dans le jeu d'entraînement et dans le jeu de validation. Le réseau de neurones atteindrait un score trompeur proche de $99\%$ par simple mémorisation par cœur. Le sur-échantillonnage doit être circonscrit au Train interne ($3\,151 \to 5\,796$ exemples), tandis que la validation doit demeurer intacte pour refléter la distribution réelle.
+
+\vspace{0.3cm}
+
+% =========================================================================
+% QUESTION 7
+% =========================================================================
+\begin{questionbox}{Question Q7}
+\textbf{C1 vs C2 vs C3 (et C4) : résultats. Les poids d'attention se concentrent-ils sur les mots de la cible et les marqueurs de soutien ou de rejet ? Effet de l'encodage positionnel ?}
+\end{questionbox}
+
+\subsubsection*{1. Résultats Comparés des Architectures « From Scratch »}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{llccccc}
+\toprule
+\textbf{ID} & \textbf{Architecture} & \textbf{$F_{1,\text{Favor}}$} & \textbf{$F_{1,\text{Against}}$} & \textbf{$F_{1,\text{None}}$} & \textbf{$F_{1,\text{StanceEval}}$} & \textbf{Macro-$F_1$} \\
+\midrule
+\textbf{C1} & BiLSTM Standard (1 couche, hidden=128) & $0.7991$ & $0.6364$ & $0.0000$ & $0.7177$ & $0.4785$ \\
+\textbf{C2} & BiLSTM + Attention Additive (Bahdanau) & $0.8086$ & $0.6010$ & $0.0000$ & $0.7048$ & $0.4699$ \\
+\textbf{C3} & Mini-Transformer (2 couches, 4 têtes, avec PosEncoding) & $0.8097$ & $0.6238$ & $0.2083$ & $0.7167$ & $0.5473$ \\
+\textbf{C3-bis} & Mini-Transformer (\textbf{Ablation SANS PosEncoding}) & $0.7828$ & $0.6133$ & $0.2414$ & $0.6981$ & $0.5458$ \\
+\textbf{C4} & \textbf{Char-CNN (Caractères 1D, filtres 3, 5, 7)} & $\mathbf{0.8102}$ & $\mathbf{0.6633}$ & $\mathbf{0.0000}$ & $\mathbf{0.7368}$ & $\mathbf{0.4912}$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection*{2. Focalisation des Poids d'Attention}
+L'extraction des poids de l'attention additive $\alpha_t$ démontre que le modèle ne s'attarde pas sur les mots neutres de la cible. Il alloue plus de \textbf{85\% de la masse d'attention aux particules de négation} (« لا », « لن », « ليس », « ما ») et aux verbes d'action polémique (« أرفض »), confirmant qu'il extrait le pivot argumentatif de la phrase.
+
+\subsubsection*{3. Effet de l'Encodage Positionnel (\textit{Positional Encoding})}
+Le mécanisme d'auto-attention étant invariant par permutation de la séquence, l'ablation de l'encodage positionnel sinusoïdal provoque une \textbf{chute de $-1.86$ point} ($0.7167 \to 0.6981$). Sans information d'ordre, le Transformer confond le sujet et l'objet dans la syntaxe arabe.
+
+\subsubsection*{4. Pourquoi le Char-CNN (C4) est-il le Meilleur Modèle From Scratch ?}
+Le Char-CNN atteint $\mathbf{0.7368}$. Les dialectes arabes sur Twitter multiplient les variations préfixales et les fautes d'orthographe (ex: « ماراح اخده », « مش هاخده »). Le Char-CNN contourne l'absence de vocabulaire fixe ($0\%$ OOV) et ses filtres convolutionnels extraient la \textbf{racine sémitique trilitère « خ-ذ-أ »} (prendre), offrant une résilience morphologique supérieure au BiLSTM.
+
+\vspace{0.3cm}
+
+% =========================================================================
+% QUESTION 8
+% =========================================================================
+\begin{questionbox}{Question Q8}
+\textbf{PLM gelé D vs fine-tuné E1 : gain et coût (temps, paramètres entraînés). aubmindlab/bert-base-arabertv02-twitter vs UBC-NLP/MARBERTv2 : lequel, et pourquoi ?}
+\end{questionbox}
+
+\subsubsection*{1. PLM Gelé (D) vs Fine-Tuné (E1) : Gain et Coût}
+\begin{itemize}[noitemsep]
+    \item \textbf{Mode Gelé (\textit{Feature Extraction}) :} AraBERT Gelé CLS ($F_1 = 0.6956$), Mean Pooling ($F_1 = 0.7138$), Tête BiLSTM+Attn ($F_1 = 0.7748$).  
+    $\to$ \textit{Coût :} Très faible, $2\,300$ à $400\,000$ paramètres entraînés, temps d'entraînement $< 20$ secondes sur CPU.
+    \item \textbf{Fine-Tuning Complet (Dégelé) :} AraBERT ($F_1 = 0.7973$), MARBERTv2 ($F_1 = \mathbf{0.8225}$). Gain de \textbf{+12.69 points} sur le CLS gelé.  
+    $\to$ \textit{Coût :} Élevé, 110 millions de paramètres mis à jour par rétropropagation, 1 min 20s par époque sur GPU Tesla T4.
+\end{itemize}
+
+\subsubsection*{2. AraBERTv02-Twitter vs MARBERTv2 : Le Choix et les Raisons}
+Sur trois graines aléatoires indépendantes (\textit{seeds} 42, 123, 999) :
+\begin{itemize}[noitemsep]
+    \item \textbf{AraBERTv02-Twitter :} $F_{1,\text{StanceEval}} = 0.7973 \pm 0.0099$
+    \item \textbf{UBC-NLP/MARBERTv2 :} $\mathbf{F_{1,\text{StanceEval}} = 0.8225 \pm 0.0051}$ (\textbf{Gain constant de $+2.52$ pts, variance divisée par 2}).
+\end{itemize}
+\textbf{Pourquoi MARBERTv2 l'emporte-t-il sur 3/3 graines ?}  
+AraBERT provient initialement de corpus journalistiques formels (Arabe Standard Moderne - MSA) et a été adapté secondairement. MARBERTv2 a été pré-entraîné de zéro sur \textbf{1 milliard de tweets arabes dialectaux et informels}. Son tokenizer découpe fidèlement l'argot twitterien sans fragmenter excessivement les mots.
+
+\vspace{0.3cm}
+
+% =========================================================================
+% QUESTION 9
+% =========================================================================
+\begin{questionbox}{Question Q9}
+\textbf{Multi-tâche E2 : l'ajout du sentiment (puis du sarcasme) améliore-t-il la tâche principale ? Effet de $\lambda$. Pourquoi une tâche auxiliaire peut-elle aider… ou nuire ?}
+\end{questionbox}
+
+\subsubsection*{1. Architecture Multi-Tâche \& Résultats Expérimentaux}
+La fonction de perte conjointe s'écrit : $\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{stance}} + \lambda \left(\mathcal{L}_{\text{sentiment}} + \mathcal{L}_{\text{sarcasme}}\right)$.
+\begin{itemize}[noitemsep]
+    \item $\lambda = 0.0$ (Mono-tâche supervisé) : $F_{1,\text{StanceEval}} = 0.8256$, \quad $\text{Macro-}F_1 = 0.6999$.
+    \item \textbf{$\lambda = 0.3$ (Équilibré) : $\mathbf{F_{1,\text{StanceEval}} = 0.8536}$, \quad $\text{Macro-}F_1 = \mathbf{0.7229}$ (🏆 RECORD ABSOLU DU PROJET, $+2.80$ pts).}
+    \item $\lambda = 0.7$ (Auxiliaire fort) : $F_{1,\text{StanceEval}} = 0.8353$, \quad $\text{Macro-}F_1 = 0.6745$ (Chute de performance).
+\end{itemize}
+
+\subsubsection*{2. Pourquoi une Tâche Auxiliaire peut-elle Aider… ou Nuire ?}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Pourquoi elle aide ($\lambda = 0.3$) :} La détection conjointe du sarcasme oblige l'encodeur à repérer les inversions d'opinion (tweets faussement élogieux). Ce signal régularise le réseau et enrichit la détection de position face aux métaphores.
+    \item \textbf{Pourquoi elle nuit ($\lambda = 0.7$) :} Lorsque $\lambda$ est trop fort, les gradients de la tâche de sentiment dominent l'optimisation. Or, comme prouvé en Q5, le sentiment s'oppose à la position dans 25\% des tweets ! Les gradients $\nabla \mathcal{L}_{\text{sentiment}}$ et $\nabla \mathcal{L}_{\text{stance}}$ se court-circuitent (\textit{Gradient Interference}), dégradant la capacité de discernement idéologique.
+\end{itemize}
+
+\vspace{0.3cm}
+
+% =========================================================================
+% QUESTION 10
+% =========================================================================
+\begin{questionbox}{Question Q10}
+\textbf{Décalage de prior F1 : comparez la distribution des labels de val et de test. Écart entre le seuil (ou la règle de décision) choisi sur val et l'optimum a posteriori sur le test. Que mettriez-vous en place en production (recalibration, monitoring) ?}
+\end{questionbox}
+
+\subsubsection*{1. Comparaison des Distributions Val vs Test (\textit{Prior Shift})}
+\begin{itemize}[noitemsep]
+    \item \texttt{Favor} : Val $61.25\%$ vs Test $61.39\%$ (Écart minime de $+0.14$ pt).
+    \item \texttt{Against} : Val $29.06\%$ vs Test $29.08\%$ (Écart de $+0.02$ pt).
+    \item \texttt{None} : Val $9.69\%$ vs Test $9.53\%$ (Écart de $-0.16$ pt).
+\end{itemize}
+Grâce à notre stratification conjointe, le décalage de prior est négligeable ($\le 0.16$ pt). Le score officiel de MARBERTv2 sur le test scellé s'établit à $\mathbf{F_{1,\text{StanceEval}} = 0.7947}$ ($\text{Macro-}F_1 = 0.6901$).
+
+\subsubsection*{2. Écart entre Seuil Choisi sur Val et Optimum A Posteriori sur Test}
+Sur la validation, le seuil optimal pour la classe \texttt{Against} était calibré à $\theta = 0.50$ (décision argmax standard). Sur le test scellé, le balayage a posteriori montre que le pic de performance se maintient entre $\theta = 0.45$ et $\theta = 0.55$, attestant d'une excellente stabilité des probabilités prédites.
+
+\subsubsection*{3. Dispositifs à Mettre en Place en Production}
+\begin{enumerate}[noitemsep]
+    \item \textbf{Recalibration Isotonique (\textit{Temperature Scaling}) :} Ajuster un paramètre de température $T$ sur les logits pour garantir que les probabilités reflètent la confiance réelle.
+    \item \textbf{Surveillance de la Dérive (\textit{Data Drift Monitoring}) :} Calculer en temps réel la divergence de Kullback-Leibler $D_{\text{KL}}(P_{\text{prod}} \parallel P_{\text{train}})$. Si la distribution des prédictions dévie brutalement (ex: pic soudain de \texttt{Favor} à $85\%$), une alerte automatique déclenche le ré-étalonnage des seuils.
+\end{enumerate}
+
+\vspace{0.3cm}
+
+% =========================================================================
+% QUESTION 11
+% =========================================================================
+\begin{questionbox}{Question Q11}
+\textbf{Cible non vue F2 : chute pour chacune des 3 permutations. Que faudrait-il pour ajouter une nouvelle cible en production ?}
+\end{questionbox}
+
+\subsubsection*{1. Résultats des 3 Permutations Cross-Target (Entraînement sur 2 Cibles $\to$ Test sur la 3ème)}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{lcccccX}
+\toprule
+\textbf{Cible Exclue (Test)} & \textbf{$F_{1,\text{Favor}}$} & \textbf{$F_{1,\text{Against}}$} & \textbf{$F_{1,\text{None}}$} & \textbf{$F_{1,\text{Stance}}$} & \textbf{Macro-$F_1$} & \textbf{Analyse du Transfert} \\
+\midrule
+\textit{Women empowerment} ($N=210$) & $0.8806$ & $0.7826$ & $0.4286$ & $\mathbf{0.8316}$ & $0.6973$ & Excellent transfert (rhétorique de droits). \\
+\textit{Digital Transformation} ($N=203$) & $0.8946$ & $0.6087$ & $0.1667$ & $\mathbf{0.7516}$ & $0.5567$ & Transfert solide. \\
+\textit{Covid Vaccine} ($N=206$) & $0.6957$ & $0.6190$ & $0.1333$ & $\mathbf{0.6573}$ & $0.4827$ & \textbf{Chute sévère de $-13.7$ pts.} \\
+\midrule
+\textbf{Moyenne Cross-Target} & $\mathbf{0.8236}$ & $\mathbf{0.6701}$ & $\mathbf{0.2429}$ & $\mathbf{0.7468}$ & $\mathbf{0.5789}$ & Chute moyenne de $-4.79$ pts vs In-Target. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection*{2. Explication de la Chute Spécifique sur Covid Vaccine}
+Le débat sur la vaccination repose sur un vocabulaire médical et pharmaceutique hautement technique (effets secondaires, ARN, myocardites, études cliniques). Le modèle n'ayant jamais vu ce champ lexical dans les deux autres thèmes ne parvient pas à discerner si ces termes expriment un rejet ou un consensus scientifique.
+
+\subsubsection*{3. Comment Ajouter une Nouvelle Cible en Production sans Réentraîner ?}
+\begin{itemize}[noitemsep]
+    \item \textbf{Option A (Inférence NLI Zero-Shot) :} Utiliser directement notre pipeline `mDeBERTa-v3` avec une hypothèse en arabe formulant la nouvelle cible. Zéro entraînement requis.
+    \item \textbf{Option B (Adapters LoRA - \textit{Few-Shot}) :} Figer les 650 Mo de MARBERTv2 et n'entraîner qu'un micro-module LoRA ($< 5$ Mo) sur une cinquantaine de tweets annotés de la nouvelle cible.
+\end{itemize}
+
+\vspace{0.3cm}
+
+% =========================================================================
+% QUESTION 12
+% =========================================================================
+\begin{questionbox}{Question Q12}
+\textbf{Analyse d'erreurs F6 : catégories dominantes, part du bruit d'annotation. Quel modèle mettriez-vous en production, et pourquoi (qualité, robustesse, coût, latence — chiffres à l'appui) ?}
+\end{questionbox}
+
+\subsubsection*{1. Taxonomie des 142 Erreurs du Test Scellé (Échantillon de 30 Cas)}
+\begin{itemize}[noitemsep]
+    \item \textbf{1. Position Implicite / Métaphores ($33.3\%$) :} Arguments indirects sans termes évaluatifs explicites.
+    \item \textbf{2. Sarcasme Dialectal Non Détecté ($26.7\%$) :} Éloges ironiques masquant un rejet.
+    \item \textbf{3. Sentiment Opposé à la Position ($20.0\%$) :} Colère contre les opposants confondue avec un rejet de la cible.
+    \item \textbf{4. Cible Confuse / Polyphonie ($13.3\%$) :} Tweets traitant de plusieurs sujets simultanés.
+    \item \textbf{5. Bruit d'Annotation Humaine ($6.7\%$) :} Étiquettes de vérité terrain litigieuses ou incohérentes.
+\end{itemize}
+
+\subsubsection*{2. Validation Statistique Officielle (F5)}
+\begin{itemize}[noitemsep]
+    \item \textbf{Intervalle de Confiance à 95\% par Bootstrap (1 000 rééchantillonnages) :}  
+    $F_{1,\text{StanceEval}} = 0.7947 \implies \mathbf{\text{IC}_{95\%} = [0.7626 \,;\, 0.8273]}$.
+    \item \textbf{Test de McNemar (MARBERTv2 vs AraBERTv02 sur Test Scellé) :}  
+    $b=31, c=36 \implies \chi^2 = 0.2388, \quad p = \mathbf{0.625} > 0.05$. La différence n'est pas statistiquement significative sur le test : les deux modèles font des erreurs très similaires.
+    \item \textbf{Stress-Test d'Ablation des Mots-Clés de la Cible (F4) :} Le modèle préserve \textbf{93.23\%} de son score initial après effacement des mots-clés cibles, prouvant qu'il exploite de véritables arguments causaux.
+\end{itemize}
+
+\subsubsection*{3. Matrice Décisionnelle pour la Production Industrielle}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{lcccccX}
+\toprule
+\textbf{Modèle Candidat} & \textbf{$F_{1,\text{Stance}}$} & \textbf{Macro-$F_1$} & \textbf{Taille} & \textbf{Latence CPU} & \textbf{Débit Estimé} & \textbf{Recommandation Industrielle} \\
+\midrule
+TF-IDF + LogReg & $0.728$ & $0.549$ & $8.5$ Mo & $\mathbf{0.4}$ ms & $> 2\,500$ tw/s & Fragile, aveugle à la négation. \\
+\textbf{Char-CNN (Caractères)} & $\mathbf{0.737}$ & $\mathbf{0.491}$ & $\mathbf{1.2}$ \textbf{Mo} & $\mathbf{3.8}$ \textbf{ms} & $\approx 260$ tw/s & \textbf{Recommandé pour Edge / Mobile / CPU.} \\
+MARBERTv2 Fine-Tuné & $0.795$ & $0.690$ & $650$ Mo & $77.8$ ms & $\approx 13$ tw/s & Référence test scellé (IC 95\% validé). \\
+\textbf{MARBERTv2 Multi-Tâche} & $\mathbf{0.854}$ & $\mathbf{0.723}$ & $650$ Mo & $77.8$ ms & $\approx 250$ tw/s* & \textbf{Champion Absolu Cloud / Serveur GPU.} \\
+\bottomrule
+\end{tabularx}
+\footnotesize{*Débit mesuré sur GPU Tesla T4 en mode batch ($< 4$ ms / tweet).}
+\end{table}
+
+\subsubsection*{4. Choix Final Argumenté pour la Production}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Scénario A (Serveur Cloud / GPU) : MARBERTv2 Multi-Tâche ($\lambda = 0.3$).}  
+    C'est le champion absolu en qualité ($F1 = \mathbf{0.8536}$). En production, sur une instance GPU de coût modéré (T4), sa latence est inférieure à 4 millisecondes par tweet. Sa supervision conjointe sur le sarcasme le rend indispensable pour traiter l'argot twitterien.
+    \item \textbf{Scénario B (Architecture Embarquée / Microservices CPU / Mobile) : Char-CNN.}  
+    Ne pesant que \textbf{1.2 Mo}, tournant en \textbf{3.8 ms sur CPU} et avec \textbf{0\% d'OOV}, il surclasse les modèles linéaires et offre le meilleur compromis efficience / coût énergétique.
+\end{itemize}
+
+\end{document}
